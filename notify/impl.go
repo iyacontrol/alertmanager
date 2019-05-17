@@ -110,6 +110,10 @@ func BuildReceiverIntegrations(nc *config.Receiver, tmpl *template.Template, log
 		n := NewPushover(c, tmpl, logger)
 		add("pushover", i, n, c)
 	}
+	for i, c := range nc.DingtalkConfigs {
+		n := NewDingtalk(c, tmpl, logger)
+		add("dingtalk", i, n, c)
+	}
 	return integrations
 }
 

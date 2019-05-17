@@ -38,6 +38,15 @@ var (
 		Text: ``,
 	}
 
+	// DefaultDingtalkConfig defines default values for Dingtalk configurations.
+	DefaultDingtalkConfig = DingtalkConfig{
+		NotifierConfig: NotifierConfig{
+			VSendResolved: false,
+		},
+		Title:   `{{ template "ding.link.title" . }}`,
+		Content: `{{ template "ding.link.content" . }}`,
+	}
+
 	// DefaultEmailSubject defines the default Subject header of an Email.
 	DefaultEmailSubject = `{{ template "email.default.subject" . }}`
 
@@ -554,6 +563,30 @@ func (c *PushoverConfig) UnmarshalYAML(unmarshal func(interface{}) error) error 
 	}
 	if c.Token == "" {
 		return fmt.Errorf("missing token in Pushover config")
+	}
+	return nil
+}
+
+type DingtalkConfig struct {
+	NotifierConfig `yaml:",inline" json:",inline"`
+
+	HTTPConfig *commoncfg.HTTPClientConfig `yaml:"http_config,omitempty" json:"http_config,omitempty"`
+
+	// Dingtalk bot address to notify.
+	WebhookURL string `yaml:"webhook_url,omitempty" json:"webhook_url,omitempty"`
+	Title      string `yaml:"title,omitempty"  json:"title,omitempty"`
+	Content    string `yaml:"content,omitempty"  json:"content,omitempty"`
+}
+
+// UnmarshalYAML implements the yaml.Unmarshaler interface.
+func (c *DingtalkConfig) UnmarshalYAML(unmarshal func(interface{}) error) error {
+	*c = DefaultDingtalkConfig
+	type plain DingtalkConfig
+	if err := unmarshal((*plain)(c)); err != nil {
+		return err
+	}
+	if c.WebhookURL == "" {
+		return fmt.Errorf("missing to in Dingtalk config")
 	}
 	return nil
 }

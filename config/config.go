@@ -413,6 +413,13 @@ func (c *Config) UnmarshalYAML(unmarshal func(interface{}) error) error {
 				voc.APIKey = c.Global.VictorOpsAPIKey
 			}
 		}
+
+		for _, dc := range rcv.DingtalkConfigs {
+			if dc.HTTPConfig == nil {
+				dc.HTTPConfig = c.Global.HTTPConfig
+			}
+		}
+
 		names[rcv.Name] = struct{}{}
 	}
 
@@ -664,6 +671,7 @@ type Receiver struct {
 	WechatConfigs    []*WechatConfig    `yaml:"wechat_configs,omitempty" json:"wechat_configs,omitempty"`
 	PushoverConfigs  []*PushoverConfig  `yaml:"pushover_configs,omitempty" json:"pushover_configs,omitempty"`
 	VictorOpsConfigs []*VictorOpsConfig `yaml:"victorops_configs,omitempty" json:"victorops_configs,omitempty"`
+	DingtalkConfigs  []*DingtalkConfig  `yaml:"dingtalk_configs,omitempty" json:"dingtalk_configs,omitempty"`
 }
 
 // UnmarshalYAML implements the yaml.Unmarshaler interface for Receiver.

@@ -22,7 +22,7 @@ type Dingtalk struct {
 	logger log.Logger
 }
 
-// NewDingtalk returns a new Email notifier.
+// NewDingtalk returns a new Dingtalk notifier.
 func NewDingtalk(c *config.DingtalkConfig, t *template.Template, l log.Logger) *Dingtalk {
 	return &Dingtalk{conf: c, tmpl: t, logger: l}
 }
